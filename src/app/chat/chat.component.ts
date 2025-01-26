@@ -143,6 +143,11 @@ export class ChatComponent implements OnInit, OnChanges {
     this.isEmojiPickerVisible = true;
     this.overlayStatusService.setOverlayStatus(true);
   }
+   
+ 
+
+
+
 
   getReplyCountValue(messageId: string): number {
     return this.replyCounts.get(messageId) ?? 0;
@@ -546,8 +551,7 @@ export class ChatComponent implements OnInit, OnChanges {
 
   onInput(event: Event): void {
     const textarea = event.target as HTMLTextAreaElement;
-    const height = (textarea.scrollTop = textarea.scrollHeight);
-    this.scrollHeightInput = height;
+    textarea.scrollTop = textarea.scrollHeight;
   }
 
   @HostListener('document:click', ['$event'])
@@ -853,6 +857,9 @@ export class ChatComponent implements OnInit, OnChanges {
     const emoji = event.emoji.native;
     this.editableMessageText += emoji;
     this.isEmojiPickerVisibleEdit = false;
+    console.log('edit picker');
+    this.closePickerEdit()
+
   }
 
   toggleEmojiEditPicker() {
@@ -861,24 +868,44 @@ export class ChatComponent implements OnInit, OnChanges {
       setTimeout(() => {
         this.isEmojiPickerVisibleEdit = true;
       }, 0);
-    }
+    } 
+    console.log('Aram')
+    this.openEmojiPickerEdit();
+  }
+  
+  closePickerEdit(){
+    this.isEmojiPickerVisibleEdit=false
+    this.overlayStatusService.setOverlayStatus(false);
+  }   
+
+  openEmojiPickerEdit() {
+    this.isEmojiPickerVisible = true;
+    this.overlayStatusService.setOverlayStatus(true);
   }
 
   @HostListener('document:click', ['$event'])
   onEMojiEditClick(event: MouseEvent) {
     const targetElement = this.elementRef.nativeElement;
+
+    // Das Emoji-Button-Element und das Picker-Element suchen
     const emojiButton = targetElement.querySelector('.edit-emoji-main div');
     const emojiPicker = targetElement.querySelector(
       '.edit-emoji-main .emoji-picker-edit'
     );
-
+  
+    // Überprüfen, ob ein Klick auf den Button oder den Picker erfolgt ist
     const isEmojiButtonClicked =
       emojiButton && emojiButton.contains(event.target);
-    const isPickerClicked = emojiPicker && emojiPicker.contains(event.target);
+    const isPickerClicked =
+      emojiPicker && emojiPicker.contains(event.target);
+  
+    // Wenn der Klick nicht auf den Button oder Picker erfolgt, Picker schließen
+    if (!isEmojiButtonClicked && !isPickerClicked && this.editMessageId ) {
+      this.closePickerEdit();
+      console.log('Picker geschlossen');
+    } 
+      
 
-    if (!isEmojiButtonClicked && !isPickerClicked) {
-      this.isEmojiPickerVisibleEdit = false;
-    }
   }
 
   chatByUserName: any;
@@ -893,7 +920,6 @@ export class ChatComponent implements OnInit, OnChanges {
   selectUser(user: any) {
     this.selectedUser = user;
   } 
-
 
   public chatFiles: any[] = [];
 

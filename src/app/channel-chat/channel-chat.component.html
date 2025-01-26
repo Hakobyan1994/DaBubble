@@ -65,7 +65,9 @@
       </div>
       <div class="message-edit" *ngIf="showEditDialog === message.id && hoveredMessageId === showEditDialog"
         (click)="toggleEditArea(message.id, message.text)">
-        <span>Nachricht bearbeiten</span>
+         <div class="edit-message">
+        <span >Nachricht bearbeiten</span>
+         </div>
       </div>
     </div>
     <div class="message">
@@ -134,8 +136,9 @@
       </div>
     </div>
     <div class="edit-message-container" *ngIf="showEditArea === message.id">
-
-      <form>
+       <div class="main-edit-container">
+      <!-- <form> -->
+        
         <div class="img-container textarea" (click)="togglePicker(message.id, true)">
           <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon">
             <mask id="mask0_86084_18390" style="mask-type: alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="25"
@@ -149,17 +152,25 @@
             </g>
           </svg>
         </div>
-        <textarea name="message" id="message" [(ngModel)]="messageToEdit">
- {{ message.text }} </textarea>
+        <textarea
+        #channelEditInput 
+        name="message" 
+        id="message" 
+        [(ngModel)]="messageToEdit">
+        {{ message.text }} 
+    </textarea>
         <div class="button-row edit-message-button-row">
           <button class="btn-secondary" (click)="cancelEdit()">
             Abbrechen
           </button>
           <button class="btn-primary" (click)="saveEditedMessage(message.id)">
-            Speichern
+            {{
+              messageToEdit.trim() === "" ? "Löschen" : "Speichern"
+            }}
           </button>
         </div>
-      </form>
+      <!-- </form> -->
+    </div>
       <img [src]="message.senderPicture" />
     </div>
 

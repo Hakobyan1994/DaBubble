@@ -125,7 +125,8 @@ export class StartScreenComponent implements OnInit, OnChanges, OnDestroy {
     this.subscribeToProfileSelection();
     this.subscribeToWelcomeChannel();
     this.subscribeToLoginStatus();
-    
+    console.log(this.selectedUser)
+    console.log(this.selectedChannel)
     this.subscriptions.push(
       this.selection.selectedUser$.subscribe((user) => {
         this.selectedUser = user;
@@ -189,21 +190,28 @@ export class StartScreenComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['selectedUser'] && this.selectedUser) {
-      this.global.channelSelected = false;
+    if   (changes['selectedUser'] && changes['selectedUser'].currentValue){
+      console.log(this.selectedUser)
       this.selectedChannel = null;
       this.onHeaderChannel = null;
+      this.global.channelSelected = false;
       this.checkProfileType();
       this.global.clearCurrentChannel();
       this.afterLoginSheet = false;
+      console.log(this.afterLoginSheet)
+      console.log(this.selectedChannel)
+      console.log(this.onHeaderChannel)
     }
 
-    if (changes['selectedChannel'] && this.selectedChannel) {
+    if (changes['selectedChannel'] && changes['selectedChannel'].currentValue) {
+      console.log(this.selectedChannel)
       this.selectedUser = null;
       this.onHeaderUser = null;
       this.fetchChannelMembers();
       this.global.channelSelected = true;
       this.global.setCurrentChannel(this.selectedChannel);
+      console.log(this.selectedUser )
+      console.log( this.onHeaderUser )
     }
 
     if (changes['onHeaderUser'] && this.onHeaderUser) {

@@ -91,6 +91,7 @@ export class HomeComponent implements OnInit {
   onUserSelected(user: any) {
     this.selectedChannel = null;
     this.selectedUser = user;
+    console.log(this.selectedUser)
     this.globalService.clearCurrentChannel();
   }
 
@@ -127,6 +128,7 @@ export class HomeComponent implements OnInit {
       this.workspaceComponent.enterByUsername(user, false);
     }
   }
+
   handleUserSelectionFromChannelThread(user: any) {
     this.selectedUser = user;
     this.onHeaderUser = user;
@@ -141,9 +143,9 @@ export class HomeComponent implements OnInit {
   
 
 
- /*  handleUserSelectionFromDirectThread(){
+//  /*  handleUserSelectionFromDirectThread(){
 
-  } */
+//   } */
 
   onThreadOpened() {
     this.isThreadOpen = true;

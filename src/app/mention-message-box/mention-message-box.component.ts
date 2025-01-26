@@ -27,6 +27,7 @@ export class MentionMessageBoxComponent implements OnInit {
 
   cancelCard() {
     this.cancelMessageBoxCard.emit();
+    this.global.openMentionMessageBox=false
   }
 
   onOutsideClick(event: MouseEvent): void {

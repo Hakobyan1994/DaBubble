@@ -4,11 +4,11 @@
     <mat-card-header class="header" *ngIf="global.isChannelMember || auth.isGuest || selectedUser">
 
       <div *ngIf="!afterLoginSheet" class="drop-down-div">
-        <button *ngIf="(selectedChannel || onHeaderChannel) && (!selectedUser && !onHeaderUser)" class="drop-down-button" mat-button (click)="openDialog()">
+        <button *ngIf="selectedChannel || onHeaderChannel" class="drop-down-button" mat-button (click)="openDialog()">
           <span class="btn-text-img"># {{ selectedChannel?.name}} </span>
           <!-- <img src="./assets/img/arrow_drop_down.svg"/></span> -->
         </button>
-        <div (click)="showMyUserProfile()" class="user-chat-info" *ngIf="(selectedUser || onHeaderUser) && (!selectedChannel && !onHeaderChannel)">
+        <div (click)="showMyUserProfile()" class="user-chat-info" *ngIf="selectedUser || onHeaderUser">
           <img [src]="
               global.statusCheck 
                 ? global.currentUserData.picture

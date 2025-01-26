@@ -114,15 +114,17 @@ export class WorkspaceComponent implements OnInit {
     ) {
       this.selectedChannel = this.selectedChannelHome;
       this.channelSelected.emit(this.selectedChannel);
-    }
+    } 
   }
 
 
 selectUser(user: any) {
-  this.userSelected.emit(user);
+  this.selectedChannel = null;
+  // console.log(this.selectedChannel)
+  this.userSelected.emit({ ...user })
   this.id = user.id;
-  this.global.directThreadSubject.next('');
-  this.global.channelThreadSubject.next(null);
+  // this.global.directThreadSubject.next('');
+  // this.global.channelThreadSubject.next(null);
   const actuallyId = this.id;
   if (this.userId && this.messageCountsArr?.messageCount && this.messageCountsArr.messageCount[actuallyId] > 0) {
     const docRef = doc(this.firestore, 'messageCounts', this.userId);
@@ -130,7 +132,8 @@ selectUser(user: any) {
     resetMessageCount[`messageCount.${actuallyId}`] = 0;
     updateDoc(docRef, resetMessageCount);
   } 
-   this.global.statusCheck =false;
+   this.global.statusCheck = false;
+
    this.openvollWidtChannelOrUserBox();
    this.hiddenVoolThreadBox();
    this.checkWidtSize();
@@ -170,7 +173,7 @@ openvollWidtChannelOrUserBox() {
   }
 
   selectCurrentUser() {
-    this.selectedChannel = null;
+    // this.selectedChannel = null;
     this.selectedUser = this.global.currentUserData;
     this.userSelected.emit(this.global.currentUserData);
     this.global.statusCheck = true;
@@ -269,8 +272,9 @@ openvollWidtChannelOrUserBox() {
   }
 
   async selectChannel(channel: any) {
-    this.channelSelected.emit(channel);
     this.selectedUser = null;
+    this.channelSelected.emit(channel);
+   
     this.selectedChannel = channel;
     const isMember = await this.global.checkChannelMembership(
       channel,
@@ -291,6 +295,7 @@ openvollWidtChannelOrUserBox() {
   toggleChannelDrawer() {
     this.channelDrawerOpen = !this.channelDrawerOpen;
   }
+
   toggleMessageDrawer() {
     this.messageDrawerOpen = !this.messageDrawerOpen;
   }

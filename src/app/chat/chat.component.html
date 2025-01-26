@@ -17,12 +17,12 @@
       !selectedChannel ||
       auth.isGuest ||
       global.isChannelMember ||
-      selectedChannel.name === 'Willkommen'
+      selectedChannel.name === 'Willkommen'  
     "
   >
     <app-mention-message-box
       (closeMentionBox)="onCancelMessageBox()"
-      *ngIf="wasClickedChatInput"
+      *ngIf="wasClickedChatInput && global.openMentionMessageBox"
       (enterChatUser)="enterChatByUserName($event)"
     >
     </app-mention-message-box>
@@ -38,32 +38,40 @@
             <span class="day-span">{{ getDayInfoForMessage(i) }}</span>
           </div>
         </div>
-        <div
+        <div 
           [ngClass]="{
-            'main-mesage-info-current':
+             'main-mesage-info-current':
               message.senderId === global.currentUserData.id,
-            'main-message-info-user':
+              'disabled-hover': editMessageId === message.id,
+              'main-message-info-user':
               message.senderId !== global.currentUserData.id,
-            backiColor: checkUpdateBackcolor === message.id,
-            backColorHover: checkUpdateBackcolor === message.id
+              backiColor: checkUpdateBackcolor === message.id,
+              backColorHover: checkUpdateBackcolor === message.id
           }"
           (mouseleave)="resetIcon(message); isEmojiPickerVisible = false"
         >
           <div *ngIf="editMessageId === message.id" class="edit-mesage-box">
             <textarea
-              #editableTextarea
               (input)="onInput($event)"
-              rows="3"
+              [rows]="3"
+              cols="50"
+              #editableTextarea 
               class="edit-input"
               [(ngModel)]="editableMessageText"
             ></textarea>
+
+             
             <div class="edit-emoji-main">
-              <emoji-mart
-                *ngIf="isEmojiPickerVisibleEdit"
-                (emojiClick)="editMessageAdd($event)"
-                size="18"
-                class="emoji-picker-edit"
-              ></emoji-mart>
+            
+           
+
+
+
+
+
+
+
+
               <div class="add-reaction" (click)="toggleEmojiEditPicker()">
                 <svg
                   width="40"
@@ -297,10 +305,12 @@
                 appearance="outlined"
               >
                 <mat-card-content
+                *ngIf="editMessageId !== message.id"
                   [ngClass]="{
+                    
                     'card-content-current':
                       message.senderId === global.currentUserData.id,
-
+                    
                     'card-content-user':
                       message.senderId !== global.currentUserData.id
                   }"
@@ -648,4 +658,15 @@
       (messageSent)="onMessageSent()"
     ></app-input-field>
   </div>
+</div>
+
+ 
+ <div  *ngIf="isEmojiPickerVisibleEdit" class="edit-message-main-picker">
+<emoji-mart
+#emojiPickerContainer
+(emojiClick)="editMessageAdd($event); "
+size="18"
+class="emoji-picker-edit"
+></emoji-mart>
+
 </div>

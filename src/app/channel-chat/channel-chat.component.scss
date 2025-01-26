@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
-  margin: 32px 0;
+ margin: 8px 0;
   padding: 24px 0;
   position: relative;
   overflow-y: auto;
@@ -77,13 +77,16 @@
       }
     }
     .text {
-      width: fit-content;
       padding: 15px;
       border-top-left-radius: 0;
       border-top-right-radius: 30px;
       border-bottom-right-radius: 30px;
       border-bottom-left-radius: 30px;
       background: #eceefe;
+      max-width: 770px;
+      overflow-wrap: break-word;
+      max-height: max-content;
+      width: fit-content;
     }
   }
   .reaction-bar {
@@ -136,6 +139,7 @@
   gap: 30px;
   padding: 10px 45px 10px 0px;
   position: relative;
+  
   &:hover {
     background-color: #eceefe;
   }
@@ -162,7 +166,7 @@
       }
     }
     .text {
-      display: flex;
+      // display: flex;
       align-self: end;
       width: fit-content;
       padding: 15px;
@@ -172,6 +176,10 @@
       border-bottom-left-radius: 30px;
       background: #797ef3;
       color: white;
+      max-width: 770px;
+      overflow-wrap: break-word;
+      max-height: max-content;
+      width: fit-content;
     }
   }
   .reaction-bar {
@@ -327,8 +335,6 @@
 
 textarea {
   padding: 20px;
-  border-radius: 20px;
-  border: 1px solid #adb0d9;
   resize: none;
   outline: none;
   font-family: Nunito;
@@ -341,6 +347,9 @@ textarea {
   width: 100%;
   height: 100%;
   overflow: auto;
+  border: none;
+  border-radius: 20px;
+  height: 100px;
 }
 
 ::-webkit-scrollbar {
@@ -348,10 +357,13 @@ textarea {
   background-color: transparent;
 }
 
-form {
-  width: 100%;
-  height: 100%;
-}
+// form {
+//   width: 100%;
+//   height: 100%;
+// } 
+
+
+
 
 .edit-message-container {
   display: flex;
@@ -365,6 +377,15 @@ form {
   left: 0;
   padding: 0 45px;
   height: 100%;
+} 
+
+
+.main-edit-container {
+  border: 1px solid #adb0d9;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+
 }
 
 .button-row {
@@ -437,5 +458,19 @@ form {
     img {
       transform: scale(1.2);
     }
+  }
+} 
+
+.edit-message{
+  width: 100%;
+  height: 100%;
+  &:hover{ 
+    span{
+      color: #444df2;
+      background-color: #eceefe;
+      border: 0 solid;
+      border-radius: 30px;
+    }
+   
   }
 }

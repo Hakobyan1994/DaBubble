@@ -23,6 +23,7 @@ import {
   QuerySnapshot,
   Unsubscribe,
   updateDoc,
+  deleteDoc
 } from '@angular/fire/firestore';
 import { GlobalVariableService } from '../services/global-variable.service';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -102,6 +103,9 @@ export class ChannelChatComponent implements OnInit {
   @Output() headerUpdate: EventEmitter<any> = new EventEmitter<any>();
   shouldScrollDown = true;
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+
+  @ViewChild('channelEditInput') channelEditInput!: ElementRef;
+  isFirstClick: boolean = true;
 
   constructor() {}
 
@@ -518,6 +522,18 @@ hiddenFullChannelOrUserThreadBox(){
   }
 
   toggleEditArea(messageId: string, messageText: string) {
+    if (this.isFirstClick) {
+      setTimeout(() => {
+        if (this.channelEditInput) {
+          const textarea = this.channelEditInput.nativeElement;
+          textarea.scrollTop = textarea.scrollHeight;
+          textarea.focus();
+        }
+      }, 20);
+      this.isFirstClick = false;
+    }
+
+
     if (this.showEditArea === messageId) {
       this.showEditArea = null;
       this.messageToEdit = '';
@@ -525,42 +541,55 @@ hiddenFullChannelOrUserThreadBox(){
       this.showEditArea = messageId;
       this.messageToEdit = messageText;
       this.toggleEditDialog(messageId);
-    }
+    } 
+
   }
 
   async saveEditedMessage(messageId: string) {
-    try {
-      const messageDocRef = doc(
-        this.firestore,
-        'channels',
-        this.selectedChannel.id,
-        'messages',
-        messageId
-      );
-
-      await updateDoc(messageDocRef, {
-         text: this.messageToEdit,
-         isEdited: true,
-         });
-
-         const messageIndex = this.messagesData.findIndex((msg) => msg.id === messageId);
-    if (messageIndex !== -1) {
-      this.messagesData[messageIndex].text = this.messageToEdit;
-      this.messagesData[messageIndex].isEdited = true;
+    const messageRef = doc(
+      this.firestore,
+      'channels',
+      this.selectedChannel.id,
+      'messages',
+      messageId
+    );
+    if (this.messageToEdit.trim() === '') {
+      try {
+        await deleteDoc(messageRef);
+        this.messagesData = this.messagesData.filter((msg) => msg.id !== messageId);
+  
+        console.log(`Message ${messageId} deleted successfully.`);
+      } catch (error) {
+        console.error('Error deleting message:', error);
+      }
+    } else {
+      try {
+        await updateDoc(messageRef, {
+          text: this.messageToEdit,
+          isEdited: true,
+        });
+        const messageIndex = this.messagesData.findIndex((msg) => msg.id === messageId);
+        if (messageIndex !== -1) {
+          this.messagesData[messageIndex].text = this.messageToEdit;
+          this.messagesData[messageIndex].isEdited = true;
+        }
+  
+        console.log(`Message ${messageId} updated successfully.`);
+      } catch (error) {
+        console.error('Error saving edited message:', error);
+      }
     }
-
-      this.showEditArea = null;
-      this.messageToEdit = '';
-
-      console.log(`Message ${messageId} updated successfully.`);
-    } catch (error) {
-      console.error('Error saving edited message:', error);
-    }
+    this.showEditArea = null;
+    this.messageToEdit = '';
+    this.isFirstClick=true;
   }
+
+
 
   cancelEdit() {
     this.showEditArea = null;
     this.messageToEdit = '';
+    this.isFirstClick=true;
   }
 
   getReactionText(message: Message, emoji: string | null): string {
